@@ -7,6 +7,10 @@
 #include "MIMS.h"
 #include "MIMSDlg.h"
 #include "afxdialogex.h"
+#include "Tab1.h"
+#include "Tab2.h"
+#include "Tab3.h"
+#include "Tab4.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -63,10 +67,10 @@ void CMIMSDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CMIMSDlg, CDialog)
-	ON_WM_SYSCOMMAND()
-	ON_WM_PAINT()
-	ON_WM_QUERYDRAGICON()
-	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB, &CMIMSDlg::OnTcnSelchangeTab)
+ON_WM_SYSCOMMAND()
+ON_WM_PAINT()
+ON_WM_QUERYDRAGICON()
+ON_NOTIFY(TCN_SELCHANGE, IDC_TAB, &CMIMSDlg::OnTcnSelchangeTab)
 END_MESSAGE_MAP()
 
 
@@ -102,15 +106,35 @@ BOOL CMIMSDlg::OnInitDialog()
 
 	// TODO: 在此添加额外的初始化代码
 
-	//为Tab Control增加三个页面
-	m_tab.InsertItem(0, "货物信息管理");
-	m_tab.InsertItem(2, "货物数量管理");
-	m_tab.InsertItem(3, "账号管理");
+	if (!InitList(L) || !InitLogList(LogL))
+	{
+		MessageBox("程序初始化失败!");
+		exit(-1);
+	}
 
-	//创建三个对话框
+	if (!ReadGoods(L))
+	{
+		string folderPath = ".\\data";
+		// 是否有重名文件夹
+		if (!PathIsDirectory(folderPath.c_str()))
+		{
+			::CreateDirectory(folderPath.c_str(), 0);
+		}
+		ofstream addfile(".\\data\\goods.txt");
+		addfile.close();
+	}
+
+	//为Tab Control增加页面
+	m_tab.InsertItem(0, "货物信息管理");
+	m_tab.InsertItem(1, "货物数量管理");
+	m_tab.InsertItem(2, "货物及操作日志查询");
+	m_tab.InsertItem(3, "设置");
+
+	//创建对话框
 	m_tab1.Create(IDD_TAB1, &m_tab);
 	m_tab2.Create(IDD_TAB2, &m_tab);
 	m_tab3.Create(IDD_TAB3, &m_tab);
+	m_tab4.Create(IDD_TAB4, &m_tab);
 
 	//设定在Tab内显示的范围  
 	CRect tabRect;
@@ -122,6 +146,7 @@ BOOL CMIMSDlg::OnInitDialog()
 	m_tab1.MoveWindow(&tabRect);
 	m_tab2.MoveWindow(&tabRect);
 	m_tab3.MoveWindow(&tabRect);
+	m_tab4.MoveWindow(&tabRect);
 
 	//显示初始页面  
 	m_tab1.ShowWindow(SW_SHOW);
@@ -189,20 +214,85 @@ void CMIMSDlg::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 	switch (m_tab.GetCurSel())
 	{
 	case 0:
+	{
 		m_tab1.ShowWindow(SW_SHOW);
 		m_tab2.ShowWindow(SW_HIDE);
 		m_tab3.ShowWindow(SW_HIDE);
+		m_tab4.ShowWindow(SW_HIDE);
 		break;
+	}
 	case 1:
+	{
 		m_tab1.ShowWindow(SW_HIDE);
 		m_tab2.ShowWindow(SW_SHOW);
 		m_tab3.ShowWindow(SW_HIDE);
+		m_tab4.ShowWindow(SW_HIDE);
+
+		//切换界面自动更新表格内容
+		if (updateflag2)
+		{
+			m_tab2.m_list2.DeleteAllItems();
+			LinkList tp = L->next;
+			int i = 0;
+			for (; tp; tp = tp->next, i++)
+			{
+				m_tab2.m_list2.InsertItem(i, to_string(i + 1).c_str());
+				m_tab2.m_list2.SetItemText(i, 1, tp->data.id.c_str());
+				m_tab2.m_list2.SetItemText(i, 2, tp->data.name.c_str());
+				m_tab2.m_list2.SetItemText(i, 3, tp->data.type.c_str());
+				m_tab2.m_list2.SetItemText(i, 4, to_string(tp->data.num).c_str());
+			}
+			updateflag2 = 0;
+		}
+
 		break;
+	}
 	case 2:
+	{
 		m_tab1.ShowWindow(SW_HIDE);
 		m_tab2.ShowWindow(SW_HIDE);
 		m_tab3.ShowWindow(SW_SHOW);
+		m_tab4.ShowWindow(SW_HIDE);
+
+		//切换界面自动更新按钮内容
+		if (updateflag3)
+		{
+			m_tab3.m_tab3id.ResetContent();
+			for (LinkList tp = L->next; tp; tp = tp->next)
+			{
+				m_tab3.m_tab3id.AddString(tp->data.id.c_str());
+			}
+			updateflag3 = 0;
+		}
+
 		break;
 	}
+	case 3:
+	{
+		m_tab1.ShowWindow(SW_HIDE);
+		m_tab2.ShowWindow(SW_HIDE);
+		m_tab3.ShowWindow(SW_HIDE);
+		m_tab4.ShowWindow(SW_SHOW);
+		break;
+	}
+	}
 	*pResult = 0;
+}
+
+
+void CMIMSDlg::OnOK()
+{
+	// TODO: 在此添加专用代码和/或调用基类
+
+	//CDialog::OnOK();
+}
+
+
+void CMIMSDlg::OnCancel()
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if (MessageBox("是否确认退出?", "提示", MB_YESNO | MB_ICONQUESTION) == IDYES)
+	{
+		CDialog::OnCancel();
+	}
 }

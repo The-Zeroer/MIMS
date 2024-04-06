@@ -5,6 +5,7 @@
 #include "MIMS.h"
 #include "afxdialogex.h"
 #include "Add1Dlg.h"
+#include "Tab2.h"
 
 
 // Add1Dlg 对话框
@@ -17,6 +18,7 @@ Add1Dlg::Add1Dlg(CWnd* pParent /*=nullptr*/)
 	, m_add1name(_T(""))
 	, m_add1type(_T(""))
 	, m_add1price(_T(""))
+	, m_add1descr(_T(""))
 {
 
 }
@@ -32,6 +34,7 @@ void Add1Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDITaad1name, m_add1name);
 	DDX_Text(pDX, IDC_EDITadd1type, m_add1type);
 	DDX_Text(pDX, IDC_EDITadd1price, m_add1price);
+	DDX_Text(pDX, IDC_EDITadd1descr, m_add1descr);
 }
 
 
@@ -46,54 +49,61 @@ END_MESSAGE_MAP()
 void Add1Dlg::OnBnClickedButtonadd1ok()
 {
 	// TODO: 在此添加控件通知处理程序代码
+
 	UpdateData(TRUE);
+
+	//判断货物信息是否完整
 	if (m_add1id == "" || m_add1name == "" || m_add1type == "" || m_add1price == "")
 	{
 		MessageBox("货物信息不完整!");
 		return;
 	}
 
-	LinkList tp = L;
-	if (tp->next)
+	//判断货物信息是否大于零
+	if (atof(m_add1price) <= 0)
 	{
-		for (; tp->next; tp = tp->next)
-		{
-			if (m_add1id == tp->next->data.id.c_str() || (m_add1name == tp->next->data.name.c_str() && m_add1type == tp->next->data.type.c_str()))
-			{
-				MessageBox("此货物已存在!");
-				return;
-			}
-		}
+		MessageBox("价格应当大于零!");
+		return;
 	}
 
-	tp->next = new LNode;
-	tp = tp->next;
-	tp->data.id = m_add1id.GetString();
-	tp->data.name = m_add1name.GetString();
-	tp->data.type = m_add1type.GetString();
-	tp->data.price = atoi(m_add1price);
-	tp->data.num = 0;
-	tp->data.descr = "无";
-	tp->next = nullptr;
 
-	fstream outfile;
-	outfile.open("goods.txt", ios_base::app);
-	if (outfile)
+	//获取新添加的货物信息
+	goods gdata;
+	gdata.id = m_add1id.GetString();
+	gdata.name = m_add1name.GetString();
+	gdata.type = m_add1type.GetString();
+	gdata.price = atof(m_add1price);
+	gdata.num = 0;
+	gdata.descr = m_add1descr.GetString();
+	if (gdata.descr == "")
 	{
-		if (L->next->next)
-		{
-			outfile << '\n';
-		}
-		outfile << tp->data.id << '\t' << tp->data.name << '\t' << tp->data.type << '\t' << tp->data.price << '\t' << tp->data.num << '\t' << tp->data.descr;
-		MessageBox("添加成功!");
-		Add1Dlg::OnOK();
+		gdata.descr = "无";
 	}
-	else
+
+	if (!AddGoods(L, gdata))
+	{
+		MessageBox("货物已存在!");
+		return;
+	}
+
+	//添加操作日志
+	opelog ldata;
+	ldata.operate = "货物信息登记";
+	ldata.username = UserName;
+	ldata.time = time(NULL);
+
+	if (!WriteGoods(L) || !WriteLog(gdata.id, ldata, 0))
 	{
 		MessageBox("添加失败!");
-		Add1Dlg::OnCancel();
+		return;
 	}
 
+	//切换界面后更新信息的标志
+	updateflag2 = 1;
+	updateflag3 = 1;
+
+	MessageBox("添加成功!");
+	Add1Dlg::OnOK();
 }
 
 
@@ -101,4 +111,12 @@ void Add1Dlg::OnBnClickedButtonadd1cancel()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	Add1Dlg::OnCancel();
+}
+
+
+void Add1Dlg::OnCancel()
+{
+	// TODO: 在此添加专用代码和/或调用基类
+
+	CDialogEx::OnCancel();
 }

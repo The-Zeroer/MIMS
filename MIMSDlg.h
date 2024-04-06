@@ -2,6 +2,10 @@
 // MIMSDlg.h: 头文件
 //
 #include "pch.h"
+#include "Tab1.h"
+#include "Tab2.h"
+#include "Tab3.h"
+#include "Tab4.h"
 #pragma once
 
 
@@ -36,5 +40,8 @@ public:
 	Tab1 m_tab1;
 	Tab2 m_tab2;
 	Tab3 m_tab3;
+	Tab4 m_tab4;
+	virtual void OnOK();
+	virtual void OnCancel();
 	afx_msg void OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult);
 };

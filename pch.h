@@ -10,12 +10,6 @@
 // 添加要在此处预编译的标头
 
 #include "framework.h"
-#include "LoginDlg.h"
-#include "Tab1.h"
-#include "Tab2.h"
-#include "Tab3.h"
-#include "Add1Dlg.h"
-
 
 #include <iostream>
 #include <fstream>
@@ -28,7 +22,7 @@ typedef struct
 	string id;
 	string name;
 	string type;
-	int price = 0;
+	double price = 0;
 	int num = 0;
 	string descr;
 }goods;
@@ -39,12 +33,74 @@ typedef struct LNode
 	struct LNode* next;
 }LNode, * LinkList;
 
-extern LinkList L;
 
+
+typedef struct
+{
+	string operate;
+	string username;
+	time_t time;
+}opelog;
+
+typedef struct LogLNode
+{
+	opelog data;
+	struct LogLNode* next;
+}LogLNode, * LogLinkList;
+
+
+
+typedef struct
+{
+	string username;
+	string passworld;
+	string privilege;
+	string reguser;
+	time_t time;
+}user;
+
+typedef struct UserLNode
+{
+	user data;
+	struct UserLNode* next;
+}UserLNode, * UserLinkList;
+
+
+
+extern LinkList L;
+extern LogLinkList LogL;
+extern UserLinkList UserL;
+extern string UserName;
+extern string Privilege;
+extern int updateflag2;
+extern int updateflag3;
+
+
+//处理货物信息的函数
 int InitList(LinkList& L);
 int ReadGoods(LinkList& L);
+int WriteGoods(LinkList L);
+int AddGoods(LinkList& L, goods data);
+int DelGoods(LinkList& L, goods data);
+int AltGoods(LinkList& L, goods data,int choose);
 
 
+//处理日志信息的函数
+int InitLogList(LogLinkList& LogL);
+int ReadLog(LogLinkList& LogL, string filename);
+int WriteLog(string filename, opelog data, int flag);
+string TimeToString(time_t time);
+
+
+//处理用户信息的函数
+int InitUserList(UserLinkList& UserL);
+int ReadUser(UserLinkList& UserL);
+int WriteUser(UserLinkList& UserL);
+int AddUser(UserLinkList& UserL, user data);
+int DelUser(UserLinkList& UserL, user data);
+int AltUser(UserLinkList& UserL, user data,int flag);
+int Login(UserLinkList& UserL, user data);
+int ViewUserPrivilege(string Privilege, int flag);
 
 
 #endif //PCH_H

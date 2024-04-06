@@ -6,6 +6,7 @@
 #include "framework.h"
 #include "MIMS.h"
 #include "MIMSDlg.h"
+#include "LoginDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -73,8 +74,8 @@ BOOL CMIMSApp::InitInstance()
 	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
 
 	//显示登录界面
-	//LoginDlg Ldlg;
-	//Ldlg.DoModal();
+	LoginDlg Ldlg;
+	Ldlg.DoModal();
 
 	//显示主界面
 	CMIMSDlg Mdlg;

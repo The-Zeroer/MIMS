@@ -27,4 +27,7 @@ private:
 public:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();
+	virtual BOOL OnInitDialog();
+	CButton m_checklogin;
+	afx_msg void OnBnClickedChecklogin();
 };
