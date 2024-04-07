@@ -101,7 +101,7 @@ void LoginDlg::OnBnClickedOk()
 	{
 		UserName = "Administrator";
 		Privilege = "1111111111";
-		if (m_checklogin)
+		if (m_checklogin.GetCheck())
 		{
 			MessageBox("系统管理员账户无法记住密码!");
 		}
