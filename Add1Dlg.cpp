@@ -39,14 +39,14 @@ void Add1Dlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(Add1Dlg, CDialogEx)
-	ON_BN_CLICKED(IDC_BUTTONadd1ok, &Add1Dlg::OnBnClickedButtonadd1ok)
-	ON_BN_CLICKED(IDC_BUTTONadd1cancel, &Add1Dlg::OnBnClickedButtonadd1cancel)
+	ON_BN_CLICKED(IDOK, &Add1Dlg::OnBnClickedOk)
+	ON_BN_CLICKED(IDCANCEL, &Add1Dlg::OnBnClickedCancel)
 END_MESSAGE_MAP()
 
 
 // Add1Dlg 消息处理程序
 
-void Add1Dlg::OnBnClickedButtonadd1ok()
+void Add1Dlg::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
@@ -94,6 +94,7 @@ void Add1Dlg::OnBnClickedButtonadd1ok()
 
 	if (!WriteGoods(L) || !WriteLog(gdata.id, ldata, 0))
 	{
+		MessageBeep(1);
 		MessageBox("添加失败!");
 		return;
 	}
@@ -107,7 +108,7 @@ void Add1Dlg::OnBnClickedButtonadd1ok()
 }
 
 
-void Add1Dlg::OnBnClickedButtonadd1cancel()
+void Add1Dlg::OnBnClickedCancel()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	Add1Dlg::OnCancel();

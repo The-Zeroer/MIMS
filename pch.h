@@ -53,7 +53,7 @@ typedef struct LogLNode
 typedef struct
 {
 	string username;
-	string passworld;
+	string password;
 	string privilege;
 	string reguser;
 	time_t time;
@@ -99,8 +99,7 @@ int WriteUser(UserLinkList& UserL);
 int AddUser(UserLinkList& UserL, user data);
 int DelUser(UserLinkList& UserL, user data);
 int AltUser(UserLinkList& UserL, user data,int flag);
-int Login(UserLinkList& UserL, user data);
+int Login(UserLinkList& UserL, user data, int flag);
 int ViewUserPrivilege(string Privilege, int flag);
-
 
 #endif //PCH_H

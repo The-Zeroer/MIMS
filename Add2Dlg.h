@@ -24,8 +24,8 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 	CString m_add2username;
-	CString m_add2passworld1;
-	CString m_add2passworld2;
+	CString m_add2password1;
+	CString m_add2password2;
 	CButton m_checkadd1;
 	CButton m_checkadd2;
 	CButton m_checkadd3;

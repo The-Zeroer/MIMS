@@ -5,6 +5,7 @@
 #include "MIMS.h"
 #include "afxdialogex.h"
 #include "LoginDlg.h"
+#include "MD5.h"
 
 
 // LoginDlg 对话框
@@ -14,7 +15,7 @@ IMPLEMENT_DYNAMIC(LoginDlg, CDialog)
 LoginDlg::LoginDlg(CWnd* pParent /*=nullptr*/)
 	: CDialog(IDD_LOGIN, pParent)
 	, m_username(_T(""))
-	, m_passworld(_T(""))
+	, m_password(_T(""))
 {
 
 }
@@ -26,8 +27,8 @@ LoginDlg::~LoginDlg()
 void LoginDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_EDIT1, m_username);
-	DDX_Text(pDX, IDC_EDIT2, m_passworld);
+	DDX_Text(pDX, IDC_EDITusername, m_username);
+	DDX_Text(pDX, IDC_EDITpassword, m_password);
 	DDX_Control(pDX, IDC_CHECKlogin, m_checklogin);
 }
 
@@ -74,9 +75,10 @@ BOOL LoginDlg::OnInitDialog()
 		if (temp1 != "" && temp2 != "")
 		{
 			m_username = temp1.c_str();
-			m_passworld = temp2.c_str();
+			m_password = temp2.c_str();
 			UpdateData(FALSE);
 			m_checklogin.SetCheck(1);
+			flag = 1;
 		}
 	}
 
@@ -91,13 +93,13 @@ void LoginDlg::OnBnClickedOk()
 
 	UpdateData(TRUE);
 
-	if (m_username == "" || m_passworld == "")
+	if (m_username == "" || m_password == "")
 	{
 		MessageBox("用户名或密码不能为空");
 		return;
 	}
 
-	if (m_username == "Admin" && m_passworld == "asdfghjkl;'")
+	if (m_username == "Admin" && m_password == "asdfghjkl;'")
 	{
 		UserName = "Administrator";
 		Privilege = "1111111111";
@@ -110,9 +112,10 @@ void LoginDlg::OnBnClickedOk()
 	{
 		user data;
 		data.username = m_username.GetString();
-		data.passworld = m_passworld.GetString();
+		data.password = m_password.GetString();
 
-		if (!Login(UserL, data))
+
+		if (!Login(UserL, data, flag))
 		{
 			MessageBox("用户名或密码错误");
 			return;
@@ -122,7 +125,13 @@ void LoginDlg::OnBnClickedOk()
 		{
 			fstream file;
 			file.open(".\\data\\flag.txt", ios::out);
-			file << data.username << '\t' << data.passworld;
+
+			if (!flag)
+			{
+				data.password = MD5(data.password).toStr();
+			}
+
+			file << data.username << '\t' << data.password;
 			file.close();
 		}
 	}

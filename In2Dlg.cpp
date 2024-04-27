@@ -28,7 +28,7 @@ void In2Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_COMBOin2id, m_in2id);
-	DDX_Text(pDX, IDC_in2name, m_in2name);
+	DDX_Text(pDX, IDC_EDITin2name, m_in2name);
 	DDX_Text(pDX, IDC_EDITin2type, m_in2type);
 	DDX_Text(pDX, IDC_EDITin2num, m_in2num);
 }
@@ -91,6 +91,7 @@ void In2Dlg::OnBnClickedOk()
 		if (dataid == "")
 		{
 			MessageBox("货物编号不能为空!");
+			return;
 		}
 
 		int i = 0, flag = 1;

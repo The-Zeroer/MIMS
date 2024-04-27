@@ -23,7 +23,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 private:
 	CString m_username;
-	CString m_passworld;
+	CString m_password;
+	int flag = 0;
 public:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();

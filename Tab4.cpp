@@ -31,7 +31,7 @@ void Tab4::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(Tab4, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTONtab4user, &Tab4::OnBnClickedButtontab4user)
-	ON_BN_CLICKED(IDC_BUTTONtab4altposswarld, &Tab4::OnBnClickedButtontab4altposswarld)
+	ON_BN_CLICKED(IDC_BUTTONtab4altpassword, &Tab4::OnBnClickedButtontab4altposswarld)
 END_MESSAGE_MAP()
 
 

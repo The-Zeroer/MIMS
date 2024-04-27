@@ -27,7 +27,9 @@ public:
 	CString m_add1type;
 	CString m_add1price;
 	CString m_add1descr;
-	afx_msg void OnBnClickedButtonadd1ok();
+	void OnBnClickedButtonadd1ok();
 	afx_msg void OnBnClickedButtonadd1cancel();
 	virtual void OnCancel();
+	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedCancel();
 };

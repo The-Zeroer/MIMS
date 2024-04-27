@@ -54,7 +54,6 @@ BOOL CMIMSApp::InitInstance()
 
 	CWinApp::InitInstance();
 
-
 	AfxEnableControlContainer();
 
 	// 创建 shell 管理器，以防对话框包含
@@ -94,6 +93,40 @@ BOOL CMIMSApp::InitInstance()
 
 	// 由于对话框已关闭，所以将返回 FALSE 以便退出应用程序，
 	//  而不是启动应用程序的消息泵。
+
 	return FALSE;
 }
 
+
+
+BOOL CMIMSApp::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+
+	if (pMsg->message == WM_KEYDOWN)			//判断是否是按键消息
+	{
+		CWnd* pCtrl = CWnd::GetFocus();			//获取焦点
+		if (pCtrl)
+		{
+			//获取焦点所在控件的ID
+			int iCtrlID = pCtrl->GetDlgCtrlID();
+			//焦点在编辑框控件时处理按键消息，不在编辑框控件时不处理按键消息
+			if (iCtrlID == IDC_EDITusername || iCtrlID == IDC_EDITpassword || iCtrlID == IDC_EDITadd1id || iCtrlID == IDC_EDITaad1name || iCtrlID == IDC_EDITadd1type || iCtrlID == IDC_EDITadd1price || iCtrlID == IDC_EDITadd1descr || iCtrlID == IDC_COMBOdel1id || iCtrlID == IDC_EDITalt1name || iCtrlID == IDC_EDITalt1type || iCtrlID == IDC_EDITalt1price || iCtrlID == IDC_EDITalt1descr || iCtrlID == IDC_COMBOin2id || iCtrlID == IDC_EDITin2num || iCtrlID == IDC_COMBOout2id || iCtrlID == IDC_EDITout2num || iCtrlID == IDC_COMBOtab3id || iCtrlID == IDC_EDITalt3password1 || iCtrlID == IDC_EDITalt3password2 || iCtrlID == IDC_EDITalt3password3 || iCtrlID == IDC_EDITadd2username || iCtrlID == IDC_EDITadd2password1 || iCtrlID == IDC_EDITadd2password2 || iCtrlID == IDC_COMBOdel2username)
+			{
+				if (pMsg->wParam == ' ')
+				{
+					MessageBox(NULL, "请勿输入空格!", 0, 0);
+					return 1;
+				}
+
+				if (iCtrlID == IDC_EDITadd1price || iCtrlID == IDC_EDITalt1price)
+				{
+
+				}
+			}
+
+		}
+	}
+
+	return CWinApp::PreTranslateMessage(pMsg);
+}

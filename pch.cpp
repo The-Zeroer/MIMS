@@ -1,6 +1,7 @@
 ﻿// pch.cpp: 与预编译标头对应的源文件
 
 #include "pch.h"
+#include "MD5.h"
 
 // 当使用预编译的头时，需要使用此源文件，编译才能成功。
 
@@ -124,10 +125,6 @@ int AltGoods(LinkList& L, goods data,int choose)
 		{
 			if (tp->data.id == data.id)
 			{
-				if (tp->data.name == data.name && tp->data.type == data.type)
-				{
-					return 0;
-				}
 				tp->data.name = data.name;
 				tp->data.type = data.type;
 				tp->data.price = data.price;
@@ -156,6 +153,7 @@ int AltGoods(LinkList& L, goods data,int choose)
 	default:
 		return 0;
 	}
+	return 0;
 }
 
 
@@ -270,7 +268,7 @@ int ReadUser(UserLinkList& UserL)
 
 	UserLinkList tp = UserL;
 	user data;
-	infile >> data.username >> data.passworld >> data.privilege >> data.reguser >> data.time;
+	infile >> data.username >> data.password >> data.privilege >> data.reguser >> data.time;
 	if (data.username == "")
 	{
 		return 1;
@@ -283,7 +281,7 @@ int ReadUser(UserLinkList& UserL)
 	{
 		tp->next = new UserLNode;
 		tp = tp->next;
-		infile >> tp->data.username >> tp->data.passworld >> tp->data.privilege >> tp->data.reguser >> tp->data.time;
+		infile >> tp->data.username >> tp->data.password >> tp->data.privilege >> tp->data.reguser >> tp->data.time;
 		tp->next = nullptr;
 	}
 	infile.close();
@@ -303,7 +301,7 @@ int WriteUser(UserLinkList& UserL)
 		UserLinkList tp = UserL->next;
 		for (; tp; tp = tp->next)
 		{
-			outfile << tp->data.username << '\t' << tp->data.passworld << '\t' << tp->data.privilege << '\t' << tp->data.reguser << '\t' << tp->data.time;
+			outfile << tp->data.username << '\t' << tp->data.password << '\t' << tp->data.privilege << '\t' << tp->data.reguser << '\t' << tp->data.time;
 			if (tp->next)
 			{
 				outfile << '\n';
@@ -328,6 +326,9 @@ int AddUser(UserLinkList& UserL, user data)
 			return 0;
 		}
 	}
+
+	data.password = MD5(data.password).toStr();
+
 	tp->next = new UserLNode;
 	tp = tp->next;
 	tp->data = data;
@@ -359,7 +360,8 @@ int AltUser(UserLinkList& UserL, user data,int flag)
 		{
 			if (flag)
 			{
-				tp->data.passworld = data.passworld;
+				data.password = MD5(data.password).toStr();
+				tp->data.password = data.password;
 				return 1;
 			}
 			else
@@ -372,7 +374,7 @@ int AltUser(UserLinkList& UserL, user data,int flag)
 	return 0;
 }
 
-int Login(UserLinkList& UserL, user data)
+int Login(UserLinkList& UserL, user data, int flag)
 {
 	UserLinkList tp = UserL->next;
 	if (!tp)
@@ -380,11 +382,16 @@ int Login(UserLinkList& UserL, user data)
 		return 0;
 	}
 
+	if (!flag)
+	{
+		data.password = MD5(data.password).toStr();
+	}
+
 	for (; tp; tp = tp->next)
 	{
-		if (data.username == tp->data.username && data.passworld == tp->data.passworld)
+		if (data.username == tp->data.username && data.password == tp->data.password)
 		{
-			UserName = tp->data.username;
+			UserName = data.username;
 			Privilege = tp->data.privilege;
 			return 1;
 		}

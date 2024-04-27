@@ -22,8 +22,8 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	CString m_passworld1;
-	CString m_passworld2;
-	CString m_passworld3;
+	CString m_password1;
+	CString m_password2;
+	CString m_password3;
 	afx_msg void OnBnClickedOk();
 };

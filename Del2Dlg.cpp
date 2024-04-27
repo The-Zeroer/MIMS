@@ -65,6 +65,7 @@ void Del2Dlg::OnBnClickedOk()
 		if (dataid == "")
 		{
 			MessageBox("用户名不能为空!");
+			return;
 		}
 
 		int i = 0, flag = 1;

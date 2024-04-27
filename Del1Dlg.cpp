@@ -88,6 +88,7 @@ void Del1Dlg::OnBnClickedOk()
 		if (dataid == "")
 		{
 			MessageBox("货物编号不能为空!");
+			return;
 		}
 
 		int i = 0, flag = 1;

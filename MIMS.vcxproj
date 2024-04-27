@@ -193,6 +193,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="In2Dlg.h" />
     <ClInclude Include="LoginDlg.h" />
+    <ClInclude Include="MD5.h" />
     <ClInclude Include="MIMS.h" />
     <ClInclude Include="MIMSDlg.h" />
     <ClInclude Include="Out2Dlg.h" />
@@ -215,6 +216,7 @@
     <ClCompile Include="Del2Dlg.cpp" />
     <ClCompile Include="In2Dlg.cpp" />
     <ClCompile Include="LoginDlg.cpp" />
+    <ClCompile Include="MD5.cpp" />
     <ClCompile Include="MIMS.cpp" />
     <ClCompile Include="MIMSDlg.cpp" />
     <ClCompile Include="Out2Dlg.cpp" />
